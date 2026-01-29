@@ -1,1 +1,22 @@
-[]
+[
+  {
+    "content": "创建 Supabase 客户端配置",
+    "status": "completed",
+    "activeForm": "创建 Supabase 客户端配置"
+  },
+  {
+    "content": "创建 AI 换装 Edge Function",
+    "status": "completed",
+    "activeForm": "创建 AI 换装 Edge Function"
+  },
+  {
+    "content": "创建必要的前端组件",
+    "status": "completed",
+    "activeForm": "创建前端组件"
+  },
+  {
+    "content": "更新主页面集成真实 AI",
+    "status": "in_progress",
+    "activeForm": "更新主页面"
+  }
+]

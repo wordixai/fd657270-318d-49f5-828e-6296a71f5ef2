@@ -1,15 +1,16 @@
 import { useState, useCallback } from 'react';
 import { Sparkles, Wand2 } from 'lucide-react';
 import { UploadZone } from '@/components/UploadZone';
-import { ClothingGallery } from '@/components/ClothingGallery';
-import { ResultPreview } from '@/components/ResultPreview';
+import { ClothingGallery, CLOTHING_ITEMS } from '@/components/ClothingGallery';
+import { ResultPreview, TryOnResult } from '@/components/ResultPreview';
 import { Toaster } from '@/components/ui/toaster';
 import { useToast } from '@/hooks/use-toast';
+import { supabase } from '@/lib/supabase';
 
 const Index = () => {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [selectedClothing, setSelectedClothing] = useState<string | null>(null);
-  const [resultImage, setResultImage] = useState<string | null>(null);
+  const [result, setResult] = useState<TryOnResult | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
@@ -32,33 +33,62 @@ const Index = () => {
       return;
     }
 
+    const selectedItem = CLOTHING_ITEMS.find(item => item.id === selectedClothing);
+    if (!selectedItem) return;
+
     setIsLoading(true);
+    setResult(null);
 
-    // Simulate AI processing (replace with actual AI API call)
-    await new Promise(resolve => setTimeout(resolve, 3000));
+    try {
+      const { data, error } = await supabase.functions.invoke('virtual-try-on', {
+        body: {
+          personImage: uploadedImage,
+          clothingImage: selectedItem.image,
+          clothingDescription: `${selectedItem.name}: ${selectedItem.description}`,
+        },
+      });
 
-    // For demo, use the uploaded image as result
-    // In production, this would be the AI-generated result
-    setResultImage(uploadedImage);
-    setIsLoading(false);
+      if (error) {
+        throw error;
+      }
 
-    toast({
-      title: '换装完成',
-      description: 'AI已为您完成换装，快来看看效果吧！',
-    });
+      if (data?.error) {
+        throw new Error(data.error);
+      }
+
+      setResult({
+        analysis: data.result.analysis,
+        generatedImage: data.result.generatedImage,
+        clothingDescription: data.result.clothingDescription,
+      });
+
+      toast({
+        title: '换装完成',
+        description: 'AI已为您完成换装分析，快来看看效果吧！',
+      });
+    } catch (error) {
+      console.error('Virtual try-on error:', error);
+      toast({
+        title: '换装失败',
+        description: error instanceof Error ? error.message : '请稍后重试',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   }, [uploadedImage, selectedClothing, toast]);
 
   const handleDownload = useCallback(() => {
-    if (resultImage) {
+    if (result?.generatedImage) {
       const link = document.createElement('a');
-      link.href = resultImage;
+      link.href = result.generatedImage;
       link.download = 'ai-outfit-result.png';
       link.click();
     }
-  }, [resultImage]);
+  }, [result]);
 
   const handleRetry = useCallback(() => {
-    setResultImage(null);
+    setResult(null);
     handleGenerate();
   }, [handleGenerate]);
 
@@ -118,7 +148,7 @@ const Index = () => {
               效果预览
             </h3>
             <ResultPreview
-              result={resultImage}
+              result={result}
               isLoading={isLoading}
               onDownload={handleDownload}
               onRetry={handleRetry}
@@ -142,8 +172,8 @@ const Index = () => {
         <div className="mt-16 grid md:grid-cols-3 gap-6">
           {[
             { title: '智能识别', desc: 'AI精准识别人体轮廓与姿态' },
-            { title: '无缝贴合', desc: '服装自然贴合，效果逼真' },
-            { title: '快速生成', desc: '几秒钟即可完成换装效果' },
+            { title: '专业分析', desc: '提供详细的穿搭建议与搭配评分' },
+            { title: '效果生成', desc: 'AI生成试穿效果图片' },
           ].map((item, i) => (
             <div key={i} className="glass-card p-6 text-center">
               <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center mx-auto mb-4">

@@ -19,11 +19,38 @@
     "tengu_thinkback": false,
     "tengu_tool_search_unsupported_models": [
       "haiku"
-    ]
+    ],
+    "tengu_ant_attribution_header_new": true
   },
   "userID": "ea7eb1451a40b1f921787eb63f8abbdeb9c4e04cf337a97325ed8c03578d40fb",
   "firstStartTime": "2026-01-29T03:11:29.130Z",
   "sonnet45MigrationComplete": true,
   "opus45MigrationComplete": true,
-  "thinkingMigrationComplete": true
+  "thinkingMigrationComplete": true,
+  "githubRepoPaths": {
+    "wordixai/fd657270-318d-49f5-828e-6296a71f5ef2": [
+      "/app"
+    ]
+  },
+  "projects": {
+    "/app": {
+      "allowedTools": [],
+      "mcpContextUris": [],
+      "mcpServers": {},
+      "enabledMcpjsonServers": [],
+      "disabledMcpjsonServers": [],
+      "hasTrustDialogAccepted": false,
+      "projectOnboardingSeenCount": 0,
+      "hasClaudeMdExternalIncludesApproved": false,
+      "hasClaudeMdExternalIncludesWarningShown": false,
+      "exampleFiles": [
+        "src/index.tsx",
+        "src/pages/Index.tsx",
+        "src/api/client.ts",
+        "src/utils/helpers.ts",
+        "src/components/App.tsx"
+      ],
+      "exampleFilesGeneratedAt": 1769666062289
+    }
+  }
 }

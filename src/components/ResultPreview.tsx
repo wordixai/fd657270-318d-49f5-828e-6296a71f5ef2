@@ -1,7 +1,14 @@
 import { Sparkles, Download, RefreshCw } from 'lucide-react';
+import { ScrollArea } from '@/components/ui/scroll-area';
+
+export interface TryOnResult {
+  analysis: string;
+  generatedImage?: string | null;
+  clothingDescription: string;
+}
 
 interface ResultPreviewProps {
-  result: string | null;
+  result: TryOnResult | null;
   isLoading: boolean;
   onDownload: () => void;
   onRetry: () => void;
@@ -17,7 +24,16 @@ export function ResultPreview({ result, isLoading, onDownload, onRetry }: Result
         </div>
         <div className="text-center">
           <p className="text-foreground font-medium">AI 正在换装中...</p>
-          <p className="text-sm text-muted-foreground mt-1">请稍候，这可能需要几秒钟</p>
+          <p className="text-sm text-muted-foreground mt-1">正在分析人物特征并生成换装效果</p>
+        </div>
+        <div className="flex gap-1">
+          {[0, 1, 2].map((i) => (
+            <div
+              key={i}
+              className="w-2 h-2 rounded-full bg-primary animate-pulse"
+              style={{ animationDelay: `${i * 0.2}s` }}
+            />
+          ))}
         </div>
       </div>
     );
@@ -25,34 +41,48 @@ export function ResultPreview({ result, isLoading, onDownload, onRetry }: Result
 
   if (result) {
     return (
-      <div className="relative w-full aspect-[3/4] rounded-2xl overflow-hidden glass-card group">
-        <img
-          src={result}
-          alt="AI Result"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-background/90 to-transparent
-                        opacity-0 group-hover:opacity-100 transition-opacity">
-          <div className="flex gap-2">
+      <div className="w-full aspect-[3/4] glass-card rounded-2xl flex flex-col overflow-hidden">
+        <ScrollArea className="flex-1 p-4">
+          {result.generatedImage && (
+            <div className="mb-4 rounded-xl overflow-hidden">
+              <img
+                src={result.generatedImage}
+                alt="AI生成效果图"
+                className="w-full aspect-square object-cover"
+              />
+            </div>
+          )}
+
+          <div className="space-y-3">
+            <div className="flex items-center gap-2 text-primary">
+              <Sparkles className="w-4 h-4" />
+              <span className="text-sm font-medium">AI 换装分析</span>
+            </div>
+            <p className="text-sm text-muted-foreground leading-relaxed whitespace-pre-wrap">
+              {result.analysis}
+            </p>
+          </div>
+        </ScrollArea>
+
+        <div className="p-3 border-t border-border/50 flex gap-2">
+          {result.generatedImage && (
             <button
               onClick={onDownload}
               className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg
-                         bg-primary/20 backdrop-blur-sm text-primary-foreground
-                         hover:bg-primary/30 transition-colors"
+                         bg-primary/20 text-primary hover:bg-primary/30 transition-colors text-sm"
             >
               <Download className="w-4 h-4" />
-              <span className="text-sm">下载</span>
+              <span>下载</span>
             </button>
-            <button
-              onClick={onRetry}
-              className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg
-                         bg-muted/50 backdrop-blur-sm text-foreground
-                         hover:bg-muted/70 transition-colors"
-            >
-              <RefreshCw className="w-4 h-4" />
-              <span className="text-sm">重试</span>
-            </button>
-          </div>
+          )}
+          <button
+            onClick={onRetry}
+            className="flex-1 flex items-center justify-center gap-2 py-2 rounded-lg
+                       bg-muted text-muted-foreground hover:bg-muted/80 transition-colors text-sm"
+          >
+            <RefreshCw className="w-4 h-4" />
+            <span>重新生成</span>
+          </button>
         </div>
       </div>
     );

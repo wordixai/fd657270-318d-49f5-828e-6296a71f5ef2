@@ -26,5 +26,37 @@
   "firstStartTime": "2026-01-29T03:11:29.130Z",
   "sonnet45MigrationComplete": true,
   "opus45MigrationComplete": true,
-  "thinkingMigrationComplete": true
+  "thinkingMigrationComplete": true,
+  "githubRepoPaths": {
+    "wordixai/fd657270-318d-49f5-828e-6296a71f5ef2": [
+      "/app"
+    ]
+  },
+  "projects": {
+    "/app": {
+      "allowedTools": [],
+      "mcpContextUris": [],
+      "mcpServers": {},
+      "enabledMcpjsonServers": [],
+      "disabledMcpjsonServers": [],
+      "hasTrustDialogAccepted": false,
+      "projectOnboardingSeenCount": 0,
+      "hasClaudeMdExternalIncludesApproved": false,
+      "hasClaudeMdExternalIncludesWarningShown": false,
+      "exampleFiles": [
+        "src/index.tsx",
+        "src/pages/Index.tsx",
+        "src/api/client.ts",
+        "src/utils/helpers.ts",
+        "src/components/App.tsx"
+      ],
+      "exampleFilesGeneratedAt": 1769666062289
+    }
+  },
+  "skillUsage": {
+    "ai-integration": {
+      "usageCount": 1,
+      "lastUsedAt": 1769666067407
+    }
+  }
 }
